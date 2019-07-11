@@ -35,6 +35,7 @@ fn main() {
 	let max_n: u32 = 10;
 
 	let matches = clap::App::new(env!("CARGO_PKG_NAME"))
+		.about(env!("CARGO_PKG_DESCRIPTION"))
 		.version(env!("CARGO_PKG_VERSION"))
 		.author(env!("CARGO_PKG_AUTHORS"))
 		.setting(clap::AppSettings::AllowExternalSubcommands)
