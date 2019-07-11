@@ -94,8 +94,6 @@ fn main() {
 			None => Duration::new(0, 0),
 		};
 
-		println!("sleeping for {}ns", delay.as_nanos());
-
 		std::thread::sleep(delay);
 	}
 }
