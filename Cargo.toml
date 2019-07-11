@@ -2,7 +2,7 @@
 name = "eb"
 description = "A command executor exercising exponential backoff"
 edition = "2018"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Kristofer Rye <kristofer.rye@gmail.com>"]
 license = "GPL-3.0-only"
 
