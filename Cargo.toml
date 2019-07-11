@@ -1,9 +1,13 @@
 [package]
 name = "eb"
+description = "A command executor exercising exponential backoff"
+edition = "2018"
 version = "0.1.0"
 authors = ["Kristofer Rye <kristofer.rye@gmail.com>"]
 license = "GPL-3.0-only"
-edition = "2018"
+
+repository = "https://github.com/rye/eb"
+readme = "README.md"
 
 [dependencies]
 clap = "*"
