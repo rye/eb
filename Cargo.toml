@@ -10,5 +10,5 @@ repository = "https://github.com/rye/eb"
 readme = "README.md"
 
 [dependencies]
-clap = "*"
-rand = "*"
+clap = "2.33.0"
+rand = "0.7.0"
