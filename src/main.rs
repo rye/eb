@@ -1,12 +1,8 @@
+use rand::distributions::{Distribution, Uniform};
 use std::process::Command;
 use std::process::ExitStatus;
 use std::time::Duration;
 use std::time::Instant;
-
-extern crate clap;
-extern crate rand;
-
-use rand::distributions::{Distribution, Uniform};
 
 pub enum SlotTime {
 	UserSpecified(Duration),
@@ -15,7 +11,7 @@ pub enum SlotTime {
 
 // This function is a basic implementation of the generic from the
 // `core::cmp::Ord` clamp function, which is unstable.  This code is stable,
-// but eventually you might want to change this to the `.clamp` method on=
+// but eventually you might want to change this to the `.clamp` method on
 // ord-y things.
 pub fn clamp<T>(value: T, min: T, max: T) -> T
 where
