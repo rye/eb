@@ -2,6 +2,7 @@ use clap::{App, AppSettings};
 use rand::distributions::{Distribution, Uniform};
 use std::process::Command;
 use std::process::ExitStatus;
+use std::thread::sleep;
 use std::time::Duration;
 use std::time::Instant;
 
@@ -89,6 +90,6 @@ fn main() {
 			None => Duration::new(0, 0),
 		};
 
-		std::thread::sleep(delay);
+		sleep(delay);
 	}
 }
