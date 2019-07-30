@@ -8,6 +8,8 @@ license = "GPL-3.0-only"
 
 repository = "https://github.com/rye/eb"
 readme = "README.md"
+keywords = ["cli", "exponential", "backoff", "tool"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = "2.33.0"
