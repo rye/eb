@@ -28,6 +28,7 @@ This will result in a proportionally small maximum delay time.
 
 ## License
 
+```
 eb: A command executor exercising exponential backoff
 Copyright (C) 2019 Kristofer J. Rye
 
@@ -43,3 +44,4 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
+```
