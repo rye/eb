@@ -13,4 +13,4 @@ categories = ["command-line-utilities"]
 
 [dependencies]
 clap = "2.33.0"
-rand = "0.7.0"
+rand = "0.7.2"
