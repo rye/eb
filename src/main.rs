@@ -6,11 +6,7 @@ use rand::distributions::{Distribution, Uniform};
 use tokio::process::Command;
 
 use core::time::Duration;
-use std::{
-	process::ExitStatus,
-	thread::sleep,
-	time::Instant,
-};
+use std::{process::ExitStatus, thread::sleep, time::Instant};
 
 #[tokio::main]
 async fn main() -> Result<(), &'static str> {
