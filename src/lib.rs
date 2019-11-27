@@ -30,24 +30,32 @@ pub enum SlotTime {
 mod tests {
 	use super::*;
 
-	#[test]
-	fn clamp_i32_inside_range() {
-		assert_eq!(clamp(1_i32, 0_i32, 2_i32), 1_i32);
-	}
+	mod clamp {
+		use super::clamp;
 
-	#[test]
-	fn clamp_i32_below_range() {
-		assert_eq!(clamp(-1_i32, 0_i32, 2_i32), 0_i32);
-	}
+		mod i32 {
+			use super::clamp;
 
-	#[test]
-	fn clamp_i32_above_range() {
-		assert_eq!(clamp(3_i32, 0_i32, 2_i32), 2_i32);
-	}
+			#[test]
+			fn inside_range() {
+				assert_eq!(clamp(1_i32, 0_i32, 2_i32), 1_i32);
+			}
 
-	#[test]
-	#[should_panic]
-	fn clamp_panics_if_not_ordered_properly() {
-		clamp(1_i32, 2_i32, 0_i32);
+			#[test]
+			fn below_range() {
+				assert_eq!(clamp(-1_i32, 0_i32, 2_i32), 0_i32);
+			}
+
+			#[test]
+			fn above_range() {
+				assert_eq!(clamp(3_i32, 0_i32, 2_i32), 2_i32);
+			}
+		}
+
+		#[test]
+		#[should_panic]
+		fn panics_if_not_ordered_properly() {
+			clamp(1_i32, 2_i32, 0_i32);
+		}
 	}
 }
