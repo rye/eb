@@ -3,10 +3,11 @@ use eb::SlotTime;
 
 use clap::{App, AppSettings};
 use rand::distributions::{Distribution, Uniform};
+use tokio::process::Command;
 
 use core::time::Duration;
 use std::{
-	process::{Command, ExitStatus},
+	process::ExitStatus,
 	thread::sleep,
 	time::Instant,
 };
@@ -43,7 +44,9 @@ async fn main() -> Result<(), &'static str> {
 
 	loop {
 		let start: Instant = Instant::now();
-		let status: ExitStatus = command.status().expect("failed to execute process");
+		let child = command.spawn().expect("Failed to spawn child");
+
+		let status: ExitStatus = child.await.expect("child process encountered an error");
 		let elapsed: Duration = start.elapsed();
 
 		iterations += 1;
