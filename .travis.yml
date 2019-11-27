@@ -29,7 +29,7 @@ before_cache: |
 script:
 - if [[ "$TRAVIS_RUST_VERSION" == nightly ]]; then cargo check --all-targets && cargo clean; else cargo check && cargo clean; fi
 - cargo fmt -- --check
-- cargo clippy -- -D clippy::all -D clippy::cargo -W clippy::pedantic
+- cargo clippy -- -D clippy::all -W clippy::cargo -W clippy::pedantic
 - cargo test
 
 after_success: |
