@@ -12,5 +12,5 @@ keywords = ["cli", "exponential", "backoff", "tool"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-clap = "2.33.0"
+clap = { version = "2.33.0", default-features = false, features = ["suggestions", "color"] }
 rand = "0.7.2"
