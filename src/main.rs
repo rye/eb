@@ -12,6 +12,8 @@ use std::{process::ExitStatus, thread::sleep, time::Instant};
 async fn main() -> Result<(), &'static str> {
 	let max_n: u32 = 10;
 
+	// Get matches and figure out the command
+
 	let matches = App::new(env!("CARGO_PKG_NAME"))
 		.about(env!("CARGO_PKG_DESCRIPTION"))
 		.version(env!("CARGO_PKG_VERSION"))
@@ -34,13 +36,15 @@ async fn main() -> Result<(), &'static str> {
 	}
 	.ok_or("no command was given")?;
 
+	// Now, begin executing!
+
 	let mut iterations: u32 = 0;
 	let mut slot_time: Option<SlotTime> = None;
 	let mut rng = rand::thread_rng();
 
 	loop {
 		let start: Instant = Instant::now();
-		let child = command.spawn().expect("Failed to spawn child");
+		let child = command.spawn().expect("failed to spawn child");
 
 		let status: ExitStatus = child.await.expect("child process encountered an error");
 		let elapsed: Duration = start.elapsed();
