@@ -10,7 +10,7 @@ pub fn clamp<T>(value: T, min: T, max: T) -> T
 where
 	T: PartialOrd,
 {
-	debug_assert!(min <= max);
+	assert!(min <= max);
 
 	if value < min {
 		min
