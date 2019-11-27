@@ -5,10 +5,11 @@ use clap::{App, AppSettings};
 use rand::distributions::{Distribution, Uniform};
 
 use core::time::Duration;
-use std::process::Command;
-use std::process::ExitStatus;
-use std::thread::sleep;
-use std::time::Instant;
+use std::{
+	process::{Command, ExitStatus},
+	thread::sleep,
+	time::Instant,
+};
 
 fn main() -> Result<(), &'static str> {
 	let max_n: u32 = 10;

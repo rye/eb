@@ -1,7 +1,6 @@
 #![no_std]
 
-use core::cmp::PartialOrd;
-use core::time::Duration;
+use core::{cmp::PartialOrd, time::Duration};
 
 // This function is a basic implementation of the generic from the
 // `core::cmp::Ord` clamp function, which is unstable.  This code is stable,
