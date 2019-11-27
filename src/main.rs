@@ -11,7 +11,8 @@ use std::{
 	time::Instant,
 };
 
-fn main() -> Result<(), &'static str> {
+#[tokio::main]
+async fn main() -> Result<(), &'static str> {
 	let max_n: u32 = 10;
 
 	let matches = App::new(env!("CARGO_PKG_NAME"))
