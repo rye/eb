@@ -13,4 +13,4 @@ categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "2.33.0", default-features = false, features = ["suggestions", "color"] }
-rand = "0.7.2"
+rand = "0.7.3"
