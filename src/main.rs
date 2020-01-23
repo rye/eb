@@ -4,7 +4,7 @@ use eb::SlotTime;
 use clap::{App, AppSettings};
 use rand::distributions::{Distribution, Uniform};
 
-use log::{debug, error, info, trace, warn};
+use log::{debug, error, info, trace};
 
 use core::time::Duration;
 use std::{
