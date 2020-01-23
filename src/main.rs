@@ -14,6 +14,9 @@ use std::{
 };
 
 fn main() -> Result<(), &'static str> {
+	#[cfg(feature = "simple_logger")]
+	simple_logger::init().unwrap();
+
 	let max_n: u32 = 10;
 
 	let matches = App::new(env!("CARGO_PKG_NAME"))
