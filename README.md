@@ -11,6 +11,22 @@ You can use `eb` like `watch`:
 $ eb -- nc -z 192.0.2.42 53
 ```
 
+## Installing it
+
+You can install `eb` via
+
+```console
+$ cargo install eb
+```
+
+### Features
+
+We currently support these features:
+
+- **`simple_logger`** enables the `simple_logger` logger.
+
+There are _no features_ enabled by default.
+
 ## The algorithm
 
 In the above console input, `eb` will watch the command and keep track of how long it takes to fail.

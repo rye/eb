@@ -11,6 +11,11 @@ readme = "README.md"
 keywords = ["cli", "exponential", "backoff", "tool"]
 categories = ["command-line-utilities"]
 
+[features]
+default = []
+
 [dependencies]
 clap = { version = "2.33.0", default-features = false, features = ["suggestions", "color"] }
+simple_logger = { version = "1.0.1", optional = true }
+log = "0.4.8"
 rand = "0.7.3"
