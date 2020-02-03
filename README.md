@@ -21,7 +21,7 @@ $ cargo install eb
 
 ### Features
 
-We currently support these features:
+We currently support these (cargo) features:
 
 - **`simple_logger`** enables the `simple_logger` logger.
 
