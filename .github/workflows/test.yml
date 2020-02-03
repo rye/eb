@@ -1,0 +1,56 @@
+name: Check, test, and build the code
+
+on:
+  push:
+  schedule:
+  - cron: 15 */6 * * *
+
+jobs:
+  check:
+    name: Check the code
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rust: [stable, beta, nightly]
+    steps:
+    - name: Install the appropriate Rust toolchain
+      run: |
+        rustup toolchain install ${{ matrix.rust }}
+        rustup default ${{ matrix.rust }}
+    - uses: actions/checkout@v1
+    - name: Run rustfmt
+      run: |
+        rustup component add rustfmt
+        cargo fmt -- --check
+    - name: Run clippy
+      run: |
+        rustup component add clippy
+        cargo clippy --all-features -- -D clippy::all -W clippy::cargo -W clippy::pedantic
+
+  test:
+    name: Run tests and measure coverage
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust: [stable]
+    steps:
+    - name: Install the appropriate Rust toolchain
+      run: |
+        rustup toolchain install ${{ matrix.rust }}
+        rustup default ${{ matrix.rust }}
+    - uses: actions/checkout@v1
+    - name: Run tests
+      run: |
+        cargo test --all-features
+    - name: Generate and upload coverage
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      run: |
+        cargo install --force cargo-tarpaulin
+        cargo tarpaulin --all-features --out Xml
+        bash <(curl -s https://codecov.io/bash)
+    - uses: actions/upload-artifact@master
+      with:
+        name: cobertura.xml
+        path: cobertura.xml
