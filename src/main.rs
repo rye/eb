@@ -13,7 +13,7 @@ use std::{
 	time::Instant,
 };
 
-fn main() -> Result<(), &'static str> {
+fn main() -> eb::ExecutionResult {
 	#[cfg(feature = "simple_logger")]
 	simple_logger::init().unwrap();
 
@@ -39,7 +39,7 @@ fn main() -> Result<(), &'static str> {
 		}
 		_ => None,
 	}
-	.ok_or("no command was given")?;
+	.ok_or(eb::Error::NoCommandGiven)?;
 
 	let mut iterations: u32 = 0;
 	let mut slot_time: Option<SlotTime> = None;
@@ -66,7 +66,7 @@ fn main() -> Result<(), &'static str> {
 			}
 			None => {
 				error!("Child terminated by signal");
-				break Err("child terminated by signal");
+				break Err(eb::Error::ChildProcessTerminatedWithSignal);
 			}
 		}
 
