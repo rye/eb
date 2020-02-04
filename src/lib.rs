@@ -1,6 +1,6 @@
 use core::{
 	cmp::PartialOrd,
-	fmt::{self, Debug, Formatter},
+	fmt::{self, Debug, Display, Formatter},
 	result,
 	time::Duration,
 };
@@ -48,7 +48,7 @@ impl Debug for Error {
 	}
 }
 
-impl core::fmt::Display for Error {
+impl Display for Error {
 	fn fmt(&self, f: &mut Formatter) -> result::Result<(), fmt::Error> {
 		Debug::fmt(self, f)
 	}
