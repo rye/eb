@@ -48,6 +48,14 @@ impl Debug for Error {
 	}
 }
 
+impl core::fmt::Display for Error {
+	fn fmt(&self, f: &mut Formatter) -> result::Result<(), fmt::Error> {
+		Debug::fmt(self, f)
+	}
+}
+
+impl std::error::Error for Error {}
+
 pub type Result<T> = result::Result<T, Error>;
 
 pub type ExecutionResult = Result<()>;
