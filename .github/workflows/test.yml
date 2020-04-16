@@ -1,4 +1,4 @@
-name: Check, test, and build the code
+name: Check and Test
 
 on:
   push:
@@ -29,28 +29,48 @@ jobs:
         cargo clippy --all-features -- -D clippy::all -W clippy::cargo -W clippy::pedantic
 
   test:
-    name: Run tests and measure coverage
+    name: Test the code
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        rust: [stable]
+        rust: [stable, beta, nightly]
     steps:
     - name: Install the appropriate Rust toolchain
       run: |
         rustup toolchain install ${{ matrix.rust }}
         rustup default ${{ matrix.rust }}
     - uses: actions/checkout@v1
-    - name: Run tests
+    - name: Run cargo test
       run: |
-        cargo test --all-features
-    - name: Generate and upload coverage
+        cargo test --all-features --no-fail-fast
+
+  coverage:
+    name: Measure test coverage
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rust: [nightly]
+    steps:
+    - name: Install the appropriate Rust toolchain
+      run: |
+        rustup toolchain install ${{ matrix.rust }}
+        rustup default ${{ matrix.rust }}
+    - uses: actions/checkout@v1
+    - name: Run tests with profiling
+      run: |
+        cargo test --all-features --no-fail-fast
+      env:
+        CARGO_INCREMENTAL: '0'
+        RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Zno-landing-pads'
+    - uses: actions-rs/grcov@v0.1
+      with:
+        config: .grcov.yml
+    - name: Upload coverage
       env:
         CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      run: |
-        cargo install --force cargo-tarpaulin
-        cargo tarpaulin --all-features --out Xml
-        bash <(curl -s https://codecov.io/bash)
-    - uses: actions/upload-artifact@master
+      run: bash <(curl -s https://codecov.io/bash) -X gcov
+    - uses: actions/upload-artifact@v1
       with:
-        name: cobertura.xml
-        path: cobertura.xml
+        name: lcov.info
+        path: ./lcov.info

@@ -1,0 +1,10 @@
+branch: true
+llvm: true
+output-type: lcov
+output-file: ./lcov.info
+prefix-dir: /home/runner/work/eb/eb/
+
+ignore:
+- "/*"
+- "C:/*"
+- "../*"
