@@ -11,6 +11,11 @@ readme = "README.md"
 keywords = ["cli", "exponential", "backoff", "tool"]
 categories = ["command-line-utilities"]
 
+[badges]
+is-it-maintained-issue-resolution = { repository = "https://github.com/rye/eb" }
+is-it-maintained-open-issues = { repository = "https://github.com/rye/eb" }
+maintenance = { status = "actively-developed" }
+
 [features]
 default = []
 
