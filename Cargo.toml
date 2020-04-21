@@ -2,7 +2,7 @@
 name = "eb"
 description = "A command executor exercising exponential backoff"
 edition = "2018"
-version = "0.3.3"
+version = "0.3.5"
 authors = ["Kristofer Rye <kristofer.rye@gmail.com>"]
 license = "GPL-3.0-only"
 
@@ -12,8 +12,8 @@ keywords = ["cli", "exponential", "backoff", "tool"]
 categories = ["command-line-utilities"]
 
 [badges]
-is-it-maintained-issue-resolution = { repository = "https://github.com/rye/eb" }
-is-it-maintained-open-issues = { repository = "https://github.com/rye/eb" }
+is-it-maintained-issue-resolution = { repository = "rye/eb" }
+is-it-maintained-open-issues = { repository = "rye/eb" }
 maintenance = { status = "actively-developed" }
 
 [features]
