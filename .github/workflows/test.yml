@@ -12,21 +12,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rust: [stable, beta, nightly]
+        rust: [stable, beta]
     steps:
     - name: Install the appropriate Rust toolchain
       run: |
         rustup toolchain install ${{ matrix.rust }}
         rustup default ${{ matrix.rust }}
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
     - name: Run rustfmt
       run: |
         rustup component add rustfmt
-        cargo fmt -- --check
+        cargo fmt --all -- --check
     - name: Run clippy
       run: |
         rustup component add clippy
-        cargo clippy --all-features -- -D clippy::all -W clippy::cargo -W clippy::pedantic
+        cargo clippy --workspace --all-features --all-targets -- -D clippy::all -W clippy::cargo -W clippy::pedantic -W clippy::cognitive-complexity
 
   test:
     name: Test the code
@@ -40,10 +40,10 @@ jobs:
       run: |
         rustup toolchain install ${{ matrix.rust }}
         rustup default ${{ matrix.rust }}
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
     - name: Run cargo test
       run: |
-        cargo test --all-features --no-fail-fast
+        cargo test --workspace --all-features --all-targets --no-fail-fast
 
   coverage:
     name: Measure test coverage
@@ -56,10 +56,10 @@ jobs:
       run: |
         rustup toolchain install ${{ matrix.rust }}
         rustup default ${{ matrix.rust }}
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v1
     - name: Run tests with profiling
       run: |
-        cargo test --all-features --no-fail-fast
+        cargo test --workspace --all-features --no-fail-fast
       env:
         CARGO_INCREMENTAL: '0'
         RUSTFLAGS: '-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off'
