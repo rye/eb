@@ -5,6 +5,7 @@ updates:
   schedule:
     interval: daily
     time: '11:00'
+  commit-message: { prefix: "" }
   open-pull-requests-limit: 99
   allow:
   - dependency-type: direct
