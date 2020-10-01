@@ -33,6 +33,7 @@ pub enum SlotTime {
 pub enum Error {
 	NoCommandGiven,
 	ChildProcessTerminatedWithSignal,
+	InvalidMaxValue(String),
 }
 
 impl Debug for Error {
@@ -41,8 +42,9 @@ impl Debug for Error {
 			f,
 			"{}",
 			match self {
-				Self::NoCommandGiven => "no command given",
-				Self::ChildProcessTerminatedWithSignal => "child process terminated with signal",
+				Self::NoCommandGiven => "no command given".to_owned(),
+				Self::ChildProcessTerminatedWithSignal => "child process terminated with signal".to_owned(),
+				Self::InvalidMaxValue(e) => format!("invalid max value: {}", e),
 			}
 		)
 	}
