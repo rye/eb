@@ -1,7 +1,7 @@
 use eb::clamp;
 use eb::SlotTime;
 
-use clap::{Arg, App, AppSettings};
+use clap::{App, AppSettings, Arg};
 use rand::distributions::{Distribution, Uniform};
 
 use log::{debug, error, info, trace};
@@ -27,7 +27,7 @@ fn main() -> eb::ExecutionResult {
 			Arg::with_name("max")
 				.short("x")
 				.takes_value(true)
-				.help("limits the number of times command is executed")
+				.help("limits the number of times command is executed"),
 		)
 		.setting(AppSettings::AllowExternalSubcommands)
 		.get_matches();
