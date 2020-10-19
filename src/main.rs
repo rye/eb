@@ -27,7 +27,7 @@ fn main() -> eb::ExecutionResult {
 			Arg::with_name("max")
 				.short("x")
 				.takes_value(true)
-				.help("limits the number of times command is executed")
+				.help("limits the number of times command is executed"),
 		)
 		.setting(AppSettings::AllowExternalSubcommands)
 		.get_matches();
