@@ -1,7 +1,7 @@
 use eb::clamp;
 use eb::SlotTime;
 
-use clap::{App, AppSettings};
+use clap::{Arg, App, AppSettings};
 use rand::distributions::{Distribution, Uniform};
 
 use log::{debug, error, info, trace};
@@ -23,6 +23,12 @@ fn main() -> eb::ExecutionResult {
 		.about(env!("CARGO_PKG_DESCRIPTION"))
 		.version(env!("CARGO_PKG_VERSION"))
 		.author(env!("CARGO_PKG_AUTHORS"))
+		.arg(
+			Arg::with_name("max")
+				.short("x")
+				.takes_value(true)
+				.help("limits the number of times command is executed")
+		)
 		.setting(AppSettings::AllowExternalSubcommands)
 		.get_matches();
 
@@ -45,9 +51,17 @@ fn main() -> eb::ExecutionResult {
 	let mut slot_time: Option<SlotTime> = None;
 	let mut rng = rand::thread_rng();
 
+	let max = match matches.value_of("max").map(|s| s.parse::<u32>()) {
+		Some(Ok(v)) => Some(v),
+		Some(Err(e)) => return Err(eb::Error::InvalidMaxValue(e.to_string())),
+		None => None,
+	};
 	trace!("Beginning iteration...");
 
 	loop {
+		if let Some(true) = max.map(|v| iterations >= v) {
+			break Ok(());
+		}
 		trace!("Starting iteration {}", iterations);
 
 		let start: Instant = Instant::now();
