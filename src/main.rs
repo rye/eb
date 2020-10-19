@@ -1,7 +1,7 @@
 use eb::clamp;
 use eb::SlotTime;
 
-use clap::{Arg, App, AppSettings};
+use clap::{App, AppSettings, Arg};
 use rand::distributions::{Distribution, Uniform};
 
 use log::{debug, error, info, trace};
