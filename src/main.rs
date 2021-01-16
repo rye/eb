@@ -13,13 +13,8 @@ use std::{
 	time::Instant,
 };
 
-fn main() -> eb::ExecutionResult {
-	#[cfg(feature = "simple_logger")]
-	simple_logger::SimpleLogger::new().init().unwrap();
-
-	let max_n: u32 = 10;
-
-	let matches = App::new(env!("CARGO_PKG_NAME"))
+fn app<'a, 'b>() -> clap::App<'a, 'b> {
+	App::new(env!("CARGO_PKG_NAME"))
 		.about(env!("CARGO_PKG_DESCRIPTION"))
 		.version(env!("CARGO_PKG_VERSION"))
 		.author(env!("CARGO_PKG_AUTHORS"))
@@ -29,8 +24,15 @@ fn main() -> eb::ExecutionResult {
 				.takes_value(true)
 				.help("limits the number of times command is executed"),
 		)
-		.setting(AppSettings::AllowExternalSubcommands)
-		.get_matches();
+}
+
+fn main() -> eb::ExecutionResult {
+	#[cfg(feature = "simple_logger")]
+	simple_logger::SimpleLogger::new().init().unwrap();
+
+	let max_n: u32 = 10;
+
+	let matches = app().get_matches();
 
 	let mut command: Command = match matches.subcommand() {
 		(name, Some(matches)) => {
