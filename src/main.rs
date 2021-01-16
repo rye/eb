@@ -1,7 +1,6 @@
 use eb::clamp;
 use eb::SlotTime;
 
-use clap::{App, AppSettings, Arg};
 use rand::distributions::{Distribution, Uniform};
 
 use log::{debug, error, info, trace};
@@ -14,6 +13,8 @@ use std::{
 };
 
 fn app<'a, 'b>() -> clap::App<'a, 'b> {
+	use clap::{App, Arg};
+
 	App::new(env!("CARGO_PKG_NAME"))
 		.about(env!("CARGO_PKG_DESCRIPTION"))
 		.version(env!("CARGO_PKG_VERSION"))
@@ -61,6 +62,7 @@ fn main() -> eb::ExecutionResult {
 		Some(Err(e)) => return Err(eb::Error::InvalidMaxValue(e.to_string())),
 		None => None,
 	};
+
 	trace!("Beginning iteration...");
 
 	loop {
