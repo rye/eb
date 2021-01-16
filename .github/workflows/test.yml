@@ -18,7 +18,7 @@ jobs:
       run: |
         rustup toolchain install ${{ matrix.rust }}
         rustup default ${{ matrix.rust }}
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Run rustfmt
       run: |
         rustup component add rustfmt
@@ -40,7 +40,7 @@ jobs:
       run: |
         rustup toolchain install ${{ matrix.rust }}
         rustup default ${{ matrix.rust }}
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Run cargo test
       run: |
         cargo test --workspace --all-features --all-targets --no-fail-fast
@@ -56,7 +56,7 @@ jobs:
       run: |
         rustup toolchain install ${{ matrix.rust }}
         rustup default ${{ matrix.rust }}
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Run tests with profiling
       run: |
         cargo test --workspace --all-features --no-fail-fast
