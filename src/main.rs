@@ -26,15 +26,8 @@ fn app<'a, 'b>() -> clap::App<'a, 'b> {
 		)
 }
 
-fn main() -> eb::ExecutionResult {
-	#[cfg(feature = "simple_logger")]
-	simple_logger::SimpleLogger::new().init().unwrap();
-
-	let max_n: u32 = 10;
-
-	let matches = app().get_matches();
-
-	let mut command: Command = match matches.subcommand() {
+fn command(arg_matches: &clap::ArgMatches) -> Option<Command> {
+	match arg_matches.subcommand() {
 		(name, Some(matches)) => {
 			let mut command = Command::new(name);
 			let args: Vec<&str> = matches.values_of("").map_or(Vec::new(), Iterator::collect);
@@ -47,7 +40,17 @@ fn main() -> eb::ExecutionResult {
 		}
 		_ => None,
 	}
-	.ok_or(eb::Error::NoCommandGiven)?;
+}
+
+fn main() -> eb::ExecutionResult {
+	#[cfg(feature = "simple_logger")]
+	simple_logger::SimpleLogger::new().init().unwrap();
+
+	let max_n: u32 = 10;
+
+	let matches = app().get_matches();
+
+	let mut command: Command = command(&matches).ok_or(eb::Error::NoCommandGiven)?;
 
 	let mut iterations: u32 = 0;
 	let mut slot_time: Option<SlotTime> = None;
