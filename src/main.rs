@@ -15,7 +15,7 @@ use std::{
 
 fn main() -> eb::ExecutionResult {
 	#[cfg(feature = "simple_logger")]
-	simple_logger::init().unwrap();
+	simple_logger::SimpleLogger::new().init().unwrap();
 
 	let max_n: u32 = 10;
 
