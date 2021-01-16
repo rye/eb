@@ -38,15 +38,12 @@ pub enum Error {
 
 impl Debug for Error {
 	fn fmt(&self, f: &mut Formatter) -> result::Result<(), fmt::Error> {
-		write!(
-			f,
-			"{}",
-			match self {
-				Self::NoCommandGiven => "no command given".to_owned(),
-				Self::ChildProcessTerminatedWithSignal => "child process terminated with signal".to_owned(),
-				Self::InvalidMaxValue(e) => format!("invalid max value: {}", e),
-			}
-		)
+		let message: String = match self {
+			Self::NoCommandGiven => "no command given".to_string(),
+			Self::ChildProcessTerminatedWithSignal => "child process terminated with signal".to_string(),
+			Self::InvalidMaxValue(e) => format!("invalid max value: {}", e),
+		};
+		write!(f, "{}", message)
 	}
 }
 
