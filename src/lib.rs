@@ -23,6 +23,7 @@ impl Debug for Error {
 			Self::ChildProcessTerminatedWithSignal => "child process terminated with signal".to_string(),
 			Self::InvalidMaxValue(e) => format!("invalid max value: {}", e),
 		};
+
 		write!(f, "{}", message)
 	}
 }
@@ -40,6 +41,4 @@ pub type Result<T> = result::Result<T, Error>;
 pub type ExecutionResult = Result<()>;
 
 #[cfg(test)]
-mod tests {
-	use super::*;
-}
+mod tests {}
