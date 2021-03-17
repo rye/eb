@@ -56,7 +56,7 @@ fn main() -> eb::ExecutionResult {
 	let mut slot_time: Option<SlotTime> = None;
 	let mut rng = rand::thread_rng();
 
-	let max = match matches.value_of("max").map(|s| s.parse::<u32>()) {
+	let max: Option<u32> = match matches.value_of("max").map(str::parse) {
 		Some(Ok(v)) => Some(v),
 		Some(Err(e)) => return Err(eb::Error::InvalidMaxValue(e.to_string())),
 		None => None,
