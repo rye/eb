@@ -3,12 +3,12 @@ updates:
 - package-ecosystem: cargo
   directory: "/"
   schedule:
-    interval: daily
-    time: '11:00'
+    interval: weekly
+    day: friday
+    time: "20:00"
   open-pull-requests-limit: 99
   commit-message: { prefix: "" }
   reviewers: [ rye ]
   assignees: [ rye ]
   allow:
-  - dependency-type: direct
-  - dependency-type: indirect
+  - dependency-type: all
