@@ -45,6 +45,23 @@ jobs:
       run: |
         cargo test --workspace --all-features --all-targets --no-fail-fast
 
+  smoke-test:
+    name: Run smoke tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rust: [stable]
+    steps:
+    - name: Install the appropriate Rust toolchain
+      run: |
+        rustup toolchain install ${{ matrix.rust }}
+        rustup default ${{ matrix.rust }}
+    - uses: actions/checkout@v2
+    - name: Run smoke test scripts
+      run: |
+        find tests -iname '*.t.sh' -print0 | xargs -0 -L1 sh
+
   coverage:
     name: Measure test coverage
     runs-on: ubuntu-latest
