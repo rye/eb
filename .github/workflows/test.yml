@@ -58,6 +58,9 @@ jobs:
         rustup toolchain install ${{ matrix.rust }}
         rustup default ${{ matrix.rust }}
     - uses: actions/checkout@v2
+    - name: Pre-build in release mode
+      run: |
+        cargo build --release
     - name: Run smoke test scripts
       run: |
         find tests -iname '*.t.sh' -print0 | xargs -0 -L1 sh
