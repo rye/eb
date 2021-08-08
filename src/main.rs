@@ -12,7 +12,7 @@ use std::{
 };
 
 fn app<'a, 'b>() -> clap::App<'a, 'b> {
-	use clap::{App, Arg};
+	use clap::{App, AppSettings, Arg};
 
 	App::new(env!("CARGO_PKG_NAME"))
 		.about(env!("CARGO_PKG_DESCRIPTION"))
@@ -24,6 +24,7 @@ fn app<'a, 'b>() -> clap::App<'a, 'b> {
 				.takes_value(true)
 				.help("limits the number of times command is executed"),
 		)
+		.setting(AppSettings::AllowExternalSubcommands)
 }
 
 fn command(arg_matches: &clap::ArgMatches) -> Option<Command> {
