@@ -18,9 +18,12 @@ maintenance = { status = "actively-developed" }
 
 [features]
 default = []
+new-error = [ "anyhow", "thiserror" ]
 
 [dependencies]
+anyhow = { version = "1.0.43", optional = true }
 clap = { version = "2.33.2", default-features = false, features = ["suggestions", "color"] }
 simple_logger = { version = "1.13.0", optional = true }
 log = "0.4.11"
 rand = "0.8.4"
+thiserror = { version = "1.0.28", optional = true }
