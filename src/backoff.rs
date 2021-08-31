@@ -1,12 +1,15 @@
 use core::time::Duration;
 
 pub fn wait_size<D: rand::distributions::Distribution<f32>, R: rand::Rng>(
-	_slot_time: &Duration,
-	_attempts_so_far: u32,
-	_rng: &mut R,
-	_distribution: &D,
+	slot_time: &Duration,
+	attempts_so_far: u32,
+	rng: &mut R,
+	distribution: &D,
 ) -> Duration {
-	Duration::new(0, 0)
+	let attempts_so_far: i32 = attempts_so_far.clamp(0_u32, i32::MAX as u32) as i32;
+	let position = distribution.sample(rng);
+	let max = 2_f32.powi(attempts_so_far) - 1.0_f32;
+	slot_time.mul_f32(position * max)
 }
 
 #[cfg(test)]
