@@ -6,7 +6,23 @@ pub fn wait_size<D: rand::distributions::Distribution<f32>, R: rand::Rng>(
 	rng: &mut R,
 	distribution: &D,
 ) -> Duration {
-	let attempts_so_far: i32 = attempts_so_far.clamp(0_u32, i32::MAX as u32) as i32;
+	wait_size_truncated(
+		slot_time,
+		attempts_so_far,
+		i32::MAX as u32,
+		rng,
+		distribution,
+	)
+}
+
+pub fn wait_size_truncated<D: rand::distributions::Distribution<f32>, R: rand::Rng>(
+	slot_time: &Duration,
+	attempts_so_far: u32,
+	exponent_max: u32,
+	rng: &mut R,
+	distribution: &D,
+) -> Duration {
+	let attempts_so_far: i32 = attempts_so_far.clamp(0_u32, exponent_max) as i32;
 	let position = distribution.sample(rng);
 	let max = 2_f32.powi(attempts_so_far) - 1.0_f32;
 	slot_time.mul_f32(position * max)
