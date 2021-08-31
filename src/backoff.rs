@@ -1,5 +1,14 @@
 use core::time::Duration;
 
+pub fn wait_size<D: rand::distributions::Distribution<f32>, R: rand::Rng>(
+	_slot_time: &Duration,
+	_attempts_so_far: u32,
+	_rng: &mut R,
+	_distribution: &D,
+) -> Duration {
+	Duration::new(0, 0)
+}
+
 #[cfg(test)]
 mod tests {
 	use super::*;
