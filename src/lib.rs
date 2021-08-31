@@ -10,6 +10,8 @@ pub enum SlotTime {
 }
 
 #[derive(PartialEq)]
+#[non_exhaustive]
+#[deprecated = "this implementation will be replaced with a more generic error implementation"]
 pub enum Error {
 	NoCommandGiven,
 	ChildProcessTerminatedWithSignal,
