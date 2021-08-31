@@ -1,5 +1,17 @@
 use core::time::Duration;
 
+/// Compute the delay in accordance with the exponential backoff algorithm.
+///
+/// Uses the `distribution` and `attempts_so_far` values to compute the number of `slot_time`'s
+/// that should be delayed for, and returns a new `Duration` with that value.
+///
+/// This is _not_ the "truncated" version.  If `attempts_so_far` is particularly large, the
+/// resulting duration can be _very_ long.  For example, for `attempts_so_far == 20`, a maximum of
+/// `2^20 - 1` times the `slot_time` would be taken.  Note that the practical limit of `i32::MAX`
+/// is used as a stopping point.
+///
+/// It is recommended, if the algorithm should be biased towards retrying sooner, to use a
+/// left-skewed distribution.
 pub fn wait_size<D: rand::distributions::Distribution<f32>, R: rand::Rng>(
 	slot_time: &Duration,
 	attempts_so_far: u32,
@@ -15,6 +27,17 @@ pub fn wait_size<D: rand::distributions::Distribution<f32>, R: rand::Rng>(
 	)
 }
 
+/// Compute the delay in accordance with the exponential backoff algorithm.
+///
+/// Uses the `distribution` and `attempts_so_far` values to compute the number of `slot_time`'s
+/// that should be delayed for, and returns a new `Duration` with that value.
+///
+/// This is the "truncated" version of the exponential backoff computation function, and prevents
+/// the exponentiation from continuing to a very large number.  A constant like `10` would prevent
+/// more than `1023` instances of the `slot_time` from being used.
+///
+/// It is recommended, if the algorithm should be biased towards retrying sooner, to use a
+/// left-skewed distribution.
 pub fn wait_size_truncated<D: rand::distributions::Distribution<f32>, R: rand::Rng>(
 	slot_time: &Duration,
 	attempts_so_far: u32,
