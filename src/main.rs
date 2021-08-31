@@ -121,15 +121,13 @@ fn main() -> eb::ExecutionResult {
 
 #[cfg(test)]
 mod tests {
-	use super::{app, max};
-
 	fn t_matches_from<'a>(argv: &[&str]) -> clap::ArgMatches<'a> {
-		let app = app();
+		let app = super::app();
 		app.get_matches_from(argv)
 	}
 
 	mod max {
-		use super::*;
+		use super::{super::max, t_matches_from};
 
 		#[test]
 		fn max_none() {
@@ -142,7 +140,7 @@ mod tests {
 
 		#[test]
 		fn max_short_valid() {
-			let argv = ["eb", "-x", "10"];
+			let argv = ["eb", "-x", "10", "cmd"];
 			let matches = t_matches_from(&argv);
 			let max = max(&matches);
 
@@ -151,7 +149,7 @@ mod tests {
 
 		#[test]
 		fn max_short_invalid() {
-			let argv = ["eb", "-x", "notanumber"];
+			let argv = ["eb", "-x", "notanumber", "cmd"];
 			let matches = t_matches_from(&argv);
 			let max = max(&matches);
 
@@ -161,6 +159,58 @@ mod tests {
 					"invalid digit found in string".to_string()
 				))
 			);
+		}
+	}
+
+	mod command {
+		use super::{super::command, t_matches_from};
+
+		#[test]
+		fn command_none() {
+			let argv = ["eb"];
+			let matches = t_matches_from(&argv);
+			let command = command(&matches);
+
+			assert!(command.is_none());
+			// TODO Test the actual population of `command` here.
+			// Gated behind https://github.com/rust-lang/rust/issues/44434.
+		}
+
+		#[test]
+		fn command_no_other_args_some() {
+			let argv = ["eb", "cmd"];
+			let matches = t_matches_from(&argv);
+			let command = command(&matches);
+
+			assert!(command.is_some());
+			// TODO Test the actual population of `command` here.
+			// Gated behind https://github.com/rust-lang/rust/issues/44434.
+		}
+
+		#[test]
+		fn command_some_max_pre() {
+			let argv = ["eb", "-x", "10", "cmd"];
+			let matches = t_matches_from(&argv);
+			let command = command(&matches);
+			let max = super::super::max(&matches);
+
+			assert!(command.is_some());
+			// TODO Test the actual population of `command` here.
+			// Gated behind https://github.com/rust-lang/rust/issues/44434.
+			assert_eq!(max, Ok(Some(10_u32)));
+		}
+
+		#[test]
+		fn command_some_max_post_none() {
+			let argv = ["eb", "cmd", "-x", "10"];
+			let matches = t_matches_from(&argv);
+			let command = command(&matches);
+			let max = super::super::max(&matches);
+
+			assert!(command.is_some());
+			// TODO Test the actual population of `command` here.
+			// Gated behind https://github.com/rust-lang/rust/issues/44434.
+			assert_eq!(max, Ok(None));
 		}
 	}
 }
