@@ -95,7 +95,7 @@ fn main() -> eb::ExecutionResult {
 			}
 			None => {
 				error!("Child terminated by signal");
-				break Err(eb::Error::ChildProcessTerminatedWithSignal);
+				break Err(eb::Error::ChildProcessTerminatedWithSignal.into());
 			}
 		}
 
@@ -116,5 +116,51 @@ fn main() -> eb::ExecutionResult {
 		debug!("Sleeping for {}s", delay.as_secs_f64());
 
 		sleep(delay);
+	}
+}
+
+#[cfg(test)]
+mod tests {
+	use super::{app, max};
+
+	fn t_matches_from<'a>(argv: &[&str]) -> clap::ArgMatches<'a> {
+		let app = app();
+		app.get_matches_from(argv)
+	}
+
+	mod max {
+		use super::*;
+
+		#[test]
+		fn max_none() {
+			let argv = ["eb", "cmd"];
+			let matches = t_matches_from(&argv);
+			let max = max(&matches);
+
+			assert_eq!(max, Ok(None));
+		}
+
+		#[test]
+		fn max_short_valid() {
+			let argv = ["eb", "-x", "10"];
+			let matches = t_matches_from(&argv);
+			let max = max(&matches);
+
+			assert_eq!(max, Ok(Some(10_u32)));
+		}
+
+		#[test]
+		fn max_short_invalid() {
+			let argv = ["eb", "-x", "notanumber"];
+			let matches = t_matches_from(&argv);
+			let max = max(&matches);
+
+			assert_eq!(
+				max,
+				Err(eb::Error::InvalidMaxValue(
+					"invalid digit found in string".to_string()
+				))
+			);
+		}
 	}
 }
