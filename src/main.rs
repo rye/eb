@@ -50,6 +50,10 @@ fn max(arg_matches: &clap::ArgMatches) -> eb::Result<Option<u32>> {
 		None => Ok(None),
 		Some(arg) => match arg.parse() {
 			Ok(max) => Ok(Some(max)),
+			#[cfg(feature = "new-error")]
+			Err(e) => Err(eb::Error::InvalidMaxValue(e.to_string()).into()),
+			#[cfg(not(feature = "new-error"))]
+			#[allow(deprecated)]
 			Err(e) => Err(eb::Error::InvalidMaxValue(e.to_string())),
 		},
 	}
@@ -61,6 +65,10 @@ fn main() -> eb::ExecutionResult {
 
 	let matches = app().get_matches();
 
+	#[cfg(feature = "new-error")]
+	let mut command: Command = command(&matches).ok_or(eb::Error::NoCommandGiven)?;
+	#[cfg(not(feature = "new-error"))]
+	#[allow(deprecated)]
 	let mut command: Command = command(&matches).ok_or(eb::Error::NoCommandGiven)?;
 
 	let mut iterations: u32 = 0;
@@ -95,6 +103,10 @@ fn main() -> eb::ExecutionResult {
 			}
 			None => {
 				error!("Child terminated by signal");
+				#[cfg(feature = "new-error")]
+				break Err(eb::Error::ChildProcessTerminatedWithSignal.into());
+				#[cfg(not(feature = "new-error"))]
+				#[allow(deprecated)]
 				break Err(eb::Error::ChildProcessTerminatedWithSignal);
 			}
 		}
