@@ -18,6 +18,8 @@ You can install `eb` via
 $ cargo install eb
 ```
 
+and you can update it via the same command.
+
 ### Features
 
 We currently support these (cargo) features:
