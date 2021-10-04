@@ -3,9 +3,9 @@
 `eb` is a small command-line application that tries its given command-line arguments with an exponentially-increasing timeout as non-zero status codes are returned.
 You might use this when, for example, you have a program that exits if something fails.
 
-`eb` only exits once a status code of `0` has been returned.
+`eb` only exits once a status code of `0` has been returned by the command it is calling, or if killed by a <kbd>Ctrl+C</kbd> or other signal.
 
-You can use `eb` like `watch`:
+You can use `eb` much like `watch`:
 
 ```console
 $ eb -- nc -z 192.0.2.42 53
