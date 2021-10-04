@@ -7,7 +7,7 @@
 You can use `eb` much like `watch`:
 
 ```console
-$ eb -- nc -z 192.0.2.42 53
+$ eb -- ssh -oConnectTimeout=0 host
 ```
 
 ## Installing it
