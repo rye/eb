@@ -1,7 +1,6 @@
 # eb
 
-`eb` is a small command-line application that tries its given command-line arguments with an exponentially-increasing timeout as non-zero status codes are returned.
-You might use this when, for example, you have a program that exits if something fails.
+`eb` is a small utility that runs a command with exponential backoff.
 
 `eb` only exits once a status code of `0` has been returned by the command it is calling, or if killed by a <kbd>Ctrl+C</kbd> or other signal.
 
