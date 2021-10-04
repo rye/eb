@@ -2,7 +2,7 @@
 
 `eb` is a small utility that runs a command with exponential backoff.
 
-`eb` only exits once a status code of `0` has been returned by the command it is calling, or if killed by a <kbd>Ctrl+C</kbd> or other signal.
+`eb` only exits once a status code of `0` has been returned by the command it is calling, or once killed by a <kbd>Ctrl+C</kbd> or other signal.
 
 You can use `eb` much like `watch`:
 
