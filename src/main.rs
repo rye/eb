@@ -11,7 +11,7 @@ use std::{
 	time::Instant,
 };
 
-fn app<'a, 'b>() -> clap::App<'a, 'b> {
+fn app<'a>() -> clap::App<'a> {
 	use clap::{App, AppSettings, Arg};
 
 	App::new(env!("CARGO_PKG_NAME"))
@@ -19,8 +19,8 @@ fn app<'a, 'b>() -> clap::App<'a, 'b> {
 		.version(env!("CARGO_PKG_VERSION"))
 		.author(env!("CARGO_PKG_AUTHORS"))
 		.arg(
-			Arg::with_name("max")
-				.short("x")
+			Arg::new("max")
+				.short('x')
 				.takes_value(true)
 				.allow_hyphen_values(true)
 				.number_of_values(1)
@@ -31,7 +31,7 @@ fn app<'a, 'b>() -> clap::App<'a, 'b> {
 
 fn command(arg_matches: &clap::ArgMatches) -> Option<Command> {
 	match arg_matches.subcommand() {
-		(name, Some(matches)) => {
+		Some((name, matches)) => {
 			let mut command = Command::new(name);
 			let args: Vec<&str> = matches.values_of("").map_or(Vec::new(), Iterator::collect);
 
@@ -119,7 +119,7 @@ fn main() -> eb::ExecutionResult {
 	}
 }
 #[cfg(test)]
-fn t_matches_from<'a>(argv: &[&str]) -> clap::ArgMatches<'a> {
+fn t_matches_from(argv: &[&str]) -> clap::ArgMatches {
 	let app = app();
 	app.get_matches_from(argv)
 }
