@@ -24,5 +24,5 @@ anyhow = "1"
 clap = { version = "3", default-features = false, features = ["std", "suggestions", "color"] }
 simple_logger = { version = "2", optional = true }
 log = "0.4.11"
-rand = "0.8.4"
+rand = "0.8.5"
 thiserror = "1"
