@@ -74,18 +74,28 @@ jobs:
     steps:
       - name: Install the appropriate Rust toolchain
         run: |
-          rustup toolchain install ${{ matrix.rust }}
+          rustup toolchain install ${{ matrix.rust }} --component llvm-tools-preview
           rustup default ${{ matrix.rust }}
-      - uses: actions/checkout@v2
+      - name: Install grcov
+        run: cargo install grcov
+      - uses: actions/checkout@v1
       - name: Run tests with profiling
         run: |
           cargo test --workspace --all-features --no-fail-fast
         env:
-          CARGO_INCREMENTAL: "0"
-          RUSTFLAGS: "-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off"
-      - uses: actions-rs/grcov@v0.1
-        with:
-          config: .grcov.yml
+          LLVM_PROFILE_FILE: "distringo-%p-%m.profraw"
+          RUSTFLAGS: >
+            -Zinstrument-coverage
+      - name: Run grcov
+        run: >
+          grcov .
+          -s .
+          --binary-path ./target/debug/
+          -t lcov
+          --llvm
+          --branch
+          --ignore-not-existing
+          -o ./lcov.info
       - name: Upload coverage
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
