@@ -23,6 +23,6 @@ default = []
 anyhow = "1"
 clap = { version = "3", default-features = false, features = ["std", "suggestions", "color"] }
 simple_logger = { version = "2", optional = true }
-log = "0.4.11"
+log = "0.4.16"
 rand = "0.8.4"
 thiserror = "1"
