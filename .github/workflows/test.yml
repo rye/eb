@@ -45,57 +45,28 @@ jobs:
         run: |
           cargo test --workspace --all-features --all-targets --no-fail-fast
 
-  smoke-test:
-    name: Run smoke tests
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        rust: [stable]
-    steps:
-      - name: Install the appropriate Rust toolchain
-        run: |
-          rustup toolchain install ${{ matrix.rust }}
-          rustup default ${{ matrix.rust }}
-      - uses: actions/checkout@v2
-      - name: Pre-build in release mode
-        run: |
-          cargo build --release
-      - name: Run smoke test scripts
-        run: |
-          find tests -iname '*.t.sh' -print0 | xargs -0 -L1 sh
-
   coverage:
     name: Measure test coverage
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        rust: [nightly]
+        rust: [stable]
     steps:
       - name: Install the appropriate Rust toolchain
         run: |
           rustup toolchain install ${{ matrix.rust }} --component llvm-tools-preview
           rustup default ${{ matrix.rust }}
-      - name: Install grcov
-        run: cargo install grcov
+      - name: Install cargo-llvm-cov
+        run: cargo install cargo-llvm-cov --version=0.4.9
       - uses: actions/checkout@v1
-      - name: Run tests with profiling
-        run: |
-          cargo test --workspace --all-features --no-fail-fast
-        env:
-          LLVM_PROFILE_FILE: "distringo-%p-%m.profraw"
-          RUSTFLAGS: >
-            -Zinstrument-coverage
-      - name: Run grcov
+      - name: Run cargo-llvm-cov
         run: >
-          grcov .
-          -s .
-          --binary-path ./target/debug/
-          -t lcov
-          --llvm
-          --branch
-          --ignore-not-existing
-          -o ./lcov.info
+          cargo llvm-cov
+          --all-features
+          --all-targets
+          --workspace
+          --lcov
+          --output-path lcov.info
       - name: Upload coverage
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
