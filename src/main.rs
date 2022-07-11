@@ -11,10 +11,10 @@ use std::{
 	time::Instant,
 };
 
-fn app<'a>() -> clap::App<'a> {
-	use clap::{App, AppSettings, Arg};
+fn app<'help>() -> clap::Command<'help> {
+	use clap::{Arg, Command};
 
-	App::new(env!("CARGO_PKG_NAME"))
+	Command::new(env!("CARGO_PKG_NAME"))
 		.about(env!("CARGO_PKG_DESCRIPTION"))
 		.version(env!("CARGO_PKG_VERSION"))
 		.author(env!("CARGO_PKG_AUTHORS"))
@@ -26,7 +26,7 @@ fn app<'a>() -> clap::App<'a> {
 				.number_of_values(1)
 				.help("limits the number of times command is executed"),
 		)
-		.setting(AppSettings::AllowExternalSubcommands)
+		.allow_external_subcommands(true)
 }
 
 fn command(arg_matches: &clap::ArgMatches) -> Option<Command> {
