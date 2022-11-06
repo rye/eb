@@ -13,32 +13,32 @@ jobs:
       matrix:
         rust: [stable, beta]
     steps:
-    - name: Install the appropriate Rust toolchain
-      run: |
-        rustup toolchain install ${{ matrix.rust }}
-        rustup default ${{ matrix.rust }}
-    - uses: actions/checkout@v2
-    - name: Run rustfmt
-      run: |
-        rustup component add rustfmt
-        cargo fmt -- --check
-    - name: Run clippy
-      run: |
-        rustup component add clippy
-        cargo clippy --all-features -- -D clippy::all -W clippy::cargo -W clippy::pedantic
-    - name: Run cargo test
-      run: |
-        cargo test --all-features --no-fail-fast
+      - name: Install the appropriate Rust toolchain
+        run: |
+          rustup toolchain install ${{ matrix.rust }}
+          rustup default ${{ matrix.rust }}
+      - uses: actions/checkout@v2
+      - name: Run rustfmt
+        run: |
+          rustup component add rustfmt
+          cargo fmt -- --check
+      - name: Run clippy
+        run: |
+          rustup component add clippy
+          cargo clippy --all-features
+      - name: Run cargo test
+        run: |
+          cargo test --all-features --no-fail-fast
 
   publish:
     name: Publish crate
     needs: [check]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Attempt to publish crate
-      uses: actions-rs/cargo@v1
-      with:
-        command: publish
-      env:
-        CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+      - uses: actions/checkout@v2
+      - name: Attempt to publish crate
+        uses: actions-rs/cargo@v1
+        with:
+          command: publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}

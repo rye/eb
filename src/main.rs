@@ -1,3 +1,6 @@
+#![deny(clippy::all)]
+#![warn(clippy::cargo, clippy::pedantic, clippy::cognitive_complexity)]
+
 use eb::SlotTime;
 
 use rand::distributions::Uniform;
