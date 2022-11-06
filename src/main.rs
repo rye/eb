@@ -6,12 +6,13 @@ use log::{debug, error, info, trace};
 
 use core::time::Duration;
 use std::{
+	ffi::OsString,
 	process::{Command, ExitStatus},
 	thread::sleep,
 	time::Instant,
 };
 
-fn app<'help>() -> clap::Command<'help> {
+fn app() -> clap::Command {
 	use clap::{Arg, Command};
 
 	Command::new(env!("CARGO_PKG_NAME"))
@@ -21,9 +22,8 @@ fn app<'help>() -> clap::Command<'help> {
 		.arg(
 			Arg::new("max")
 				.short('x')
-				.takes_value(true)
-				.allow_hyphen_values(true)
-				.number_of_values(1)
+				.num_args(1)
+				.allow_negative_numbers(true)
 				.help("limits the number of times command is executed"),
 		)
 		.allow_external_subcommands(true)
@@ -33,10 +33,11 @@ fn command(arg_matches: &clap::ArgMatches) -> Option<Command> {
 	match arg_matches.subcommand() {
 		Some((name, matches)) => {
 			let mut command = Command::new(name);
-			let args: Vec<&str> = matches.values_of("").map_or(Vec::new(), Iterator::collect);
 
-			for arg in args {
-				command.arg(arg);
+			if let Some(subcommand_args) = matches.get_many::<OsString>("") {
+				for arg in subcommand_args {
+					command.arg(arg);
+				}
 			}
 
 			Some(command)
@@ -46,7 +47,7 @@ fn command(arg_matches: &clap::ArgMatches) -> Option<Command> {
 }
 
 fn max(arg_matches: &clap::ArgMatches) -> eb::Result<Option<u32>> {
-	match arg_matches.value_of("max") {
+	match arg_matches.get_one::<String>("max") {
 		None => Ok(None),
 		Some(arg) => match arg.parse() {
 			Ok(max) => Ok(Some(max)),
