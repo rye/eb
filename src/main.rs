@@ -21,9 +21,8 @@ fn app() -> clap::Command {
 		.arg(
 			Arg::new("max")
 				.short('x')
-				.takes_value(true)
-				.allow_hyphen_values(true)
-				.number_of_values(1)
+				.num_args(1)
+				.allow_negative_numbers(true)
 				.help("limits the number of times command is executed"),
 		)
 		.allow_external_subcommands(true)
