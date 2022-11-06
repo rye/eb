@@ -11,7 +11,7 @@ use std::{
 	time::Instant,
 };
 
-fn app<'help>() -> clap::Command<'help> {
+fn app() -> clap::Command {
 	use clap::{Arg, Command};
 
 	Command::new(env!("CARGO_PKG_NAME"))
