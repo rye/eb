@@ -176,8 +176,6 @@ mod command {
 		let command = command(&matches);
 
 		assert!(command.is_none());
-		// TODO Test the actual population of `command` here.
-		// Gated behind https://github.com/rust-lang/rust/issues/44434.
 	}
 
 	#[test]
@@ -187,8 +185,12 @@ mod command {
 		let command = command(&matches);
 
 		assert!(command.is_some());
-		// TODO Test the actual population of `command` here.
-		// Gated behind https://github.com/rust-lang/rust/issues/44434.
+
+		let command = command.unwrap();
+		assert_eq!(command.get_program(), "cmd");
+
+		let mut args = command.get_args();
+		assert_eq!(args.next(), None);
 	}
 
 	#[test]
@@ -198,10 +200,14 @@ mod command {
 		let command = command(&matches);
 		let max = super::max(&matches);
 
-		assert!(command.is_some());
-		// TODO Test the actual population of `command` here.
-		// Gated behind https://github.com/rust-lang/rust/issues/44434.
 		assert_eq!(max, Ok(Some(10_u32)));
+		assert!(command.is_some());
+
+		let command = command.unwrap();
+		assert_eq!(command.get_program(), "cmd");
+
+		let mut args = command.get_args();
+		assert_eq!(args.next(), None);
 	}
 
 	#[test]
@@ -211,9 +217,15 @@ mod command {
 		let command = command(&matches);
 		let max = super::max(&matches);
 
-		assert!(command.is_some());
-		// TODO Test the actual population of `command` here.
-		// Gated behind https://github.com/rust-lang/rust/issues/44434.
 		assert_eq!(max, Ok(None));
+		assert!(command.is_some());
+
+		let command = command.unwrap();
+		assert_eq!(command.get_program(), "cmd");
+
+		let mut args = command.get_args();
+		assert_eq!(args.next(), Some("-x".as_ref()));
+		assert_eq!(args.next(), Some("10".as_ref()));
+		assert_eq!(args.next(), None);
 	}
 }
