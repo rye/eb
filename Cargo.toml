@@ -26,4 +26,4 @@ clap = { version = "4", default-features = false, features = ["std", "suggestion
 simple_logger = { version = "5", optional = true }
 log = "0.4.20"
 rand = "0.8.5"
-thiserror = "1"
+thiserror = "2"
