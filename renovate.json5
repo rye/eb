@@ -1,15 +1,12 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base",
-    // Semantic commits add useless noise; turn them off explicitly.
-    ":semanticCommitsDisabled",
-    // Update lockfile versions weekly
-    ":maintainLockFilesWeekly",
-    // Pin github-actions with a digest to avoid surprises when they update
-    "helpers:pinGitHubActionDigests",
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
+    ':semanticCommitsDisabled',
+    ':maintainLockFilesWeekly',
+    'helpers:pinGitHubActionDigests',
   ],
-  "prConcurrentLimit": 0,
-  "prHourlyLimit": 0,
-  "stabilityDays": 1
+  prConcurrentLimit: 0,
+  prHourlyLimit: 0,
+  minimumReleaseAge: '1 day',
 }
