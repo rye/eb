@@ -69,7 +69,7 @@ fn main() -> eb::ExecutionResult {
 
 	let mut iterations: u32 = 0;
 	let mut slot_time: Option<SlotTime> = None;
-	let mut rng = rand::thread_rng();
+	let mut rng = rand::rng();
 
 	let max: Option<u32> = max(&matches)?;
 

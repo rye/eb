@@ -68,7 +68,7 @@ mod tests {
 	#[test]
 	fn attempts_0_wait_size_0() {
 		let distribution = test_distribution::Always1 {};
-		let mut rng = rand::thread_rng();
+		let mut rng = rand::rng();
 
 		let slot_time = Duration::new(1, 0);
 
@@ -81,7 +81,7 @@ mod tests {
 	#[test]
 	fn attempts_1_wait_size_1() {
 		let distribution = test_distribution::Always1 {};
-		let mut rng = rand::thread_rng();
+		let mut rng = rand::rng();
 
 		let slot_time = Duration::new(1, 0);
 
@@ -94,7 +94,7 @@ mod tests {
 	#[test]
 	fn attempts_2_wait_size_3() {
 		let distribution = test_distribution::Always1 {};
-		let mut rng = rand::thread_rng();
+		let mut rng = rand::rng();
 
 		let slot_time = Duration::new(1, 0);
 
@@ -107,7 +107,7 @@ mod tests {
 	#[test]
 	fn attempts_3_wait_size_7() {
 		let distribution = test_distribution::Always1 {};
-		let mut rng = rand::thread_rng();
+		let mut rng = rand::rng();
 
 		let slot_time = Duration::new(1, 0);
 
