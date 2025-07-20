@@ -3,7 +3,7 @@
 
 use eb::SlotTime;
 
-use rand::distributions::Uniform;
+use rand::distr::Uniform;
 
 use log::{debug, error, info, trace};
 
@@ -73,7 +73,7 @@ fn main() -> eb::ExecutionResult {
 
 	let max: Option<u32> = max(&matches)?;
 
-	let distribution = Uniform::new(0.0_f32, 1.0_f32);
+	let distribution = Uniform::new(0.0_f32, 1.0_f32)?;
 
 	trace!("Beginning iteration...");
 

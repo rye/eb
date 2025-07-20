@@ -12,7 +12,7 @@ use core::time::Duration;
 ///
 /// It is recommended, if the algorithm should be biased towards retrying sooner, to use a
 /// left-skewed distribution.
-pub fn wait_size<D: rand::distributions::Distribution<f32>, R: rand::Rng>(
+pub fn wait_size<D: rand::distr::Distribution<f32>, R: rand::Rng>(
 	slot_time: &Duration,
 	attempts_so_far: u32,
 	rng: &mut R,
@@ -38,7 +38,7 @@ pub fn wait_size<D: rand::distributions::Distribution<f32>, R: rand::Rng>(
 ///
 /// It is recommended, if the algorithm should be biased towards retrying sooner, to use a
 /// left-skewed distribution.
-pub fn wait_size_truncated<D: rand::distributions::Distribution<f32>, R: rand::Rng>(
+pub fn wait_size_truncated<D: rand::distr::Distribution<f32>, R: rand::Rng>(
 	slot_time: &Duration,
 	attempts_so_far: u32,
 	exponent_max: u32,
@@ -58,7 +58,7 @@ mod tests {
 	mod test_distribution {
 		pub(super) struct Always1 {}
 
-		impl rand::distributions::Distribution<f32> for Always1 {
+		impl rand::distr::Distribution<f32> for Always1 {
 			fn sample<R: rand::Rng + ?Sized>(&self, _: &mut R) -> f32 {
 				1.0
 			}
