@@ -81,7 +81,7 @@ fn main() -> eb::ExecutionResult {
 		if let Some(true) = max.map(|max| iterations >= max) {
 			break Ok(());
 		}
-		trace!("Starting iteration {}", iterations);
+		trace!("Starting iteration {iterations}");
 
 		let start: Instant = Instant::now();
 		let status: ExitStatus = command.status().expect("failed to execute process");
@@ -95,7 +95,7 @@ fn main() -> eb::ExecutionResult {
 				break Ok(());
 			}
 			Some(code) => {
-				info!("Child exited with status {}", code);
+				info!("Child exited with status {code}");
 			}
 			None => {
 				error!("Child terminated by signal");
