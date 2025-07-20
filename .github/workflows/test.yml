@@ -34,7 +34,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        rust: [stable, beta, nightly, 1.57]
+        rust: [stable, beta, nightly, 1.74]
     steps:
       - name: Install the appropriate Rust toolchain
         run: |
