@@ -17,13 +17,21 @@ jobs:
   minimal-versions:
     name: Check minimal dependency versions
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        rust: [stable, beta, nightly, 1.88]
     steps:
       - name: Install nightly (needed to resolve -Z minimal-versions)
         run: rustup toolchain install nightly
       - name: Install cargo-hack and cargo-minimal-versions
-        run: cargo install cargo-hack cargo-minimal-versions --locked
+        run: cargo +nightly install cargo-hack cargo-minimal-versions --locked
+      - name: Install and select the toolchain under test
+        run: |
+          rustup toolchain install ${{ matrix.rust }}
+          rustup default ${{ matrix.rust }}
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
-      - name: Check with minimal dependency versions
-        run: cargo minimal-versions check --workspace --all-features --all-targets
-      - name: Test with minimal dependency versions
-        run: cargo minimal-versions test --workspace --all-features --all-targets --no-fail-fast
+      - name: Check with minimal dependency versions across the feature powerset
+        run: cargo minimal-versions check --workspace --feature-powerset --all-targets
+      - name: Test with minimal dependency versions across the feature powerset
+        run: cargo minimal-versions test --workspace --feature-powerset --all-targets --no-fail-fast
