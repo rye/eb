@@ -3,10 +3,7 @@ use std::process::{Command, ExitStatus};
 /// The result of a single attempt to run a command.
 pub(crate) enum Outcome {
 	/// The command exited successfully.
-	#[allow(
-		dead_code,
-		reason = "not used as of 2026-07-15 but might be used shortly"
-	)]
+	#[allow(dead_code)]
 	Complete(ExitStatus),
 	/// The command exited unsuccessfully; retrying may help.
 	Retry(ExitStatus),
