@@ -14,6 +14,14 @@ use core::time::Duration;
 use std::{process::Command, thread::sleep, time::Instant};
 
 fn main() -> eb::ExecutionResult {
+	let code = execute()?;
+	if code != 0 {
+		std::process::exit(code);
+	}
+	Ok(())
+}
+
+fn execute() -> anyhow::Result<i32> {
 	#[cfg(feature = "simple_logger")]
 	simple_logger::SimpleLogger::new().init().unwrap();
 
@@ -23,6 +31,7 @@ fn main() -> eb::ExecutionResult {
 	let mut runner = CommandRunner::new(command);
 
 	let mut iterations: u32 = 0;
+	let mut last_code = 0;
 	let mut slot_time: Option<SlotTime> = None;
 	let mut rng = rand::rng();
 
@@ -34,7 +43,7 @@ fn main() -> eb::ExecutionResult {
 
 	loop {
 		if let Some(true) = max.map(|max| iterations >= max) {
-			break Ok(());
+			break Ok(last_code);
 		}
 		trace!("Starting iteration {iterations}");
 
@@ -47,13 +56,14 @@ fn main() -> eb::ExecutionResult {
 		match outcome {
 			Outcome::Complete(_) => {
 				info!("Child exited with status 0; finished.");
-				break Ok(());
+				break Ok(0);
 			}
 			Outcome::Retry(status) => {
 				let code = status
 					.code()
 					.expect("a Retry outcome always carries a status code");
 				info!("Child exited with status {code}");
+				last_code = code;
 			}
 			Outcome::Fatal => {
 				error!("Child terminated by signal");
