@@ -32,12 +32,12 @@ pub(crate) fn command(arg_matches: &clap::ArgMatches) -> Option<Command> {
 	Some(command)
 }
 
-pub(crate) fn max(arg_matches: &clap::ArgMatches) -> eb::Result<Option<u32>> {
+pub(crate) fn max(arg_matches: &clap::ArgMatches) -> crate::Result<Option<u32>> {
 	match arg_matches.get_one::<String>("max") {
 		None => Ok(None),
 		Some(arg) => match arg.parse() {
 			Ok(max) => Ok(Some(max)),
-			Err(e) => Err(eb::Error::InvalidMaxValue(e.to_string())),
+			Err(e) => Err(crate::Error::InvalidMaxValue(e.to_string())),
 		},
 	}
 }
@@ -78,7 +78,7 @@ mod max {
 
 		assert_eq!(
 			max,
-			Err(eb::Error::InvalidMaxValue(
+			Err(crate::Error::InvalidMaxValue(
 				"invalid digit found in string".to_string()
 			))
 		);
