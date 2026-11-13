@@ -11,7 +11,9 @@ these fixtures; portable CLI text tests also run elsewhere.
 The tests cover no command, version text, immediate success, two failures before
 success, retry exhaustion, invalid limits, fatal signals, and verbatim child
 arguments. Invocation counts and captured child output establish execution behavior;
-logger messages are deliberately not asserted. Exhausting `-x 2` returns the last child exit code.
+logger messages are deliberately not asserted. Fixed slots, decimal duration validation,
+slot synchronization, stop-code lists, zero limits, and wrapper-option pass-through
+are covered too. Most execution tests use `-i 0s`; the short-slot test uses `1ms`. Exhausting `-x 2` returns the last child exit code.
 
 
 `snapshots/no-command.stderr` and `snapshots/version.stdout` are plain text
