@@ -11,9 +11,8 @@ these fixtures; portable CLI text tests also run elsewhere.
 The tests cover no command, version text, immediate success, two failures before
 success, retry exhaustion, invalid limits, fatal signals, and verbatim child
 arguments. Invocation counts and captured child output establish execution behavior;
-logger messages are deliberately not asserted. In particular, exhausting `-x 2`
-currently exits **0** even though both child attempts fail. The test characterizes
-that behavior; change its expectation when the CLI's exhaustion policy changes.
+logger messages are deliberately not asserted. Exhausting `-x 2` returns the last child exit code.
+
 
 `snapshots/no-command.stderr` and `snapshots/version.stdout` are plain text
 snapshots, compared with assert_cmd. To update one after an intentional wording

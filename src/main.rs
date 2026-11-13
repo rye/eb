@@ -11,9 +11,13 @@ use rand::distr::Uniform;
 use log::{debug, error, info, trace};
 
 use core::time::Duration;
-use std::{process::Command, thread::sleep, time::Instant};
+use std::{
+	process::{Command, ExitCode},
+	thread::sleep,
+	time::Instant,
+};
 
-fn main() -> eb::ExecutionResult {
+fn main() -> anyhow::Result<ExitCode> {
 	#[cfg(feature = "simple_logger")]
 	simple_logger::SimpleLogger::new().init().unwrap();
 
@@ -23,6 +27,7 @@ fn main() -> eb::ExecutionResult {
 	let mut runner = CommandRunner::new(command);
 
 	let mut iterations: u32 = 0;
+	let mut last_code = ExitCode::SUCCESS;
 	let mut slot_time: Option<SlotTime> = None;
 	let mut rng = rand::rng();
 
@@ -33,8 +38,8 @@ fn main() -> eb::ExecutionResult {
 	trace!("Beginning iteration...");
 
 	loop {
-		if let Some(true) = max.map(|max| iterations >= max) {
-			break Ok(());
+		if max.is_some_and(|max| iterations >= max) {
+			break Ok(last_code);
 		}
 		trace!("Starting iteration {iterations}");
 
@@ -47,13 +52,14 @@ fn main() -> eb::ExecutionResult {
 		match outcome {
 			Outcome::Complete(_) => {
 				info!("Child exited with status 0; finished.");
-				break Ok(());
+				break Ok(ExitCode::SUCCESS);
 			}
 			Outcome::Retry(status) => {
 				let code = status
 					.code()
 					.expect("a Retry outcome always carries a status code");
 				info!("Child exited with status {code}");
+				last_code = exit_code(code);
 			}
 			Outcome::Fatal => {
 				error!("Child terminated by signal");
@@ -79,4 +85,10 @@ fn main() -> eb::ExecutionResult {
 
 		sleep(delay);
 	}
+}
+
+/// Converts a child's exit code into this process's exit code. Codes that do
+/// not fit in a `u8` (possible only on Windows) become a generic failure.
+fn exit_code(code: i32) -> ExitCode {
+	u8::try_from(code).map_or(ExitCode::FAILURE, ExitCode::from)
 }
