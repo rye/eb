@@ -15,3 +15,8 @@ pub use rand;
 pub mod backoff;
 pub mod retry;
 pub use retry::{Execution, Retry, RetryError, RetryInfo, Retryable, StopReason};
+
+// Compile and run the README's Rust examples as doctests.
+#[cfg(doctest)]
+#[doc = include_str!("../README.md")]
+struct ReadmeDoctests;
