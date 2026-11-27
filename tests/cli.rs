@@ -63,15 +63,14 @@ mod execution {
 	}
 
 	#[test]
-	fn exhausted_limit_currently_returns_success() {
+	fn exhausted_limit_returns_last_child_code() {
 		let fixture = Fixture::new("never");
 		let mut command = eb();
 		command.args(["-x", "2"]);
-		// Characterize the current CLI: exhausting retries returns 0 despite child failure.
 		fixture
 			.command(command)
 			.assert()
-			.code(0)
+			.code(7)
 			.stdout(contains("attempt 2\n"));
 		fixture.assert_count(2);
 	}
