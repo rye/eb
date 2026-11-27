@@ -5,13 +5,14 @@ mod cli;
 
 use cli::command::{CommandRunner, Outcome};
 use eb::{
-	backoff::{BinaryExponential, Slot},
+	backoff::{BackoffExt, BinaryExponential, Jitter, Slot},
 	Retry,
 };
 use log::info;
 use std::{
 	num::NonZeroU32,
 	process::{Command, ExitCode},
+	time::Duration,
 };
 
 fn main() -> anyhow::Result<ExitCode> {
@@ -25,9 +26,26 @@ fn main() -> anyhow::Result<ExitCode> {
 	if max == Some(0) {
 		return Ok(ExitCode::SUCCESS);
 	}
+	let stop_on: Vec<i32> = matches
+		.get_many::<i32>("stop-on")
+		.into_iter()
+		.flatten()
+		.copied()
+		.collect();
 	let mut runner = CommandRunner::new(command);
-	// The slot time is the mean runtime of the failed attempts so far.
-	let mut policy = Retry::new().with_backoff(BinaryExponential::new(Slot::measured()));
+	let backoff = BinaryExponential::new(
+		matches
+			.get_one::<Duration>("slot-time")
+			.copied()
+			.map_or(Slot::measured(), Slot::Fixed),
+	)
+	.jitter(if matches.get_flag("discrete") {
+		Jitter::Discrete
+	} else {
+		Jitter::Continuous
+	});
+	let mut policy =
+		Retry::new().with_backoff(backoff.between_starts_if(matches.get_flag("sync-slots")));
 	if let Some(max) = max.and_then(NonZeroU32::new) {
 		policy = policy.max_attempts(max);
 	}
@@ -36,8 +54,10 @@ fn main() -> anyhow::Result<ExitCode> {
 			Outcome::Complete(_) => Ok(()),
 			outcome => Err(outcome),
 		})
-		// Signals are fatal; only ordinary non-zero exits are retried.
-		.when(|outcome: &Outcome| matches!(outcome, Outcome::Retry(_)))
+		.when(|outcome: &Outcome| match outcome {
+			Outcome::Retry(status) => !status.code().is_some_and(|code| stop_on.contains(&code)),
+			_ => false,
+		})
 		.on_retry(|outcome, info| {
 			if let Outcome::Retry(status) = outcome {
 				info!(

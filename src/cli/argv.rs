@@ -16,6 +16,35 @@ pub(crate) fn app() -> clap::Command {
 				.help("limits the number of times command is executed"),
 		)
 		.arg(
+			Arg::new("slot-time")
+				.short('i')
+				.long("slot-time")
+				.value_name("SLOT_TIME")
+				.value_parser(parse_duration)
+				.help("Fixed slot duration (e.g. 500ms, 1.5s, 1m; bare numbers are seconds)"),
+		)
+		.arg(
+			Arg::new("discrete")
+				.long("discrete")
+				.action(clap::ArgAction::SetTrue)
+				.help("Use integer-slot IEEE 802.3 style jitter"),
+		)
+		.arg(
+			Arg::new("sync-slots")
+				.long("sync-slots")
+				.action(clap::ArgAction::SetTrue)
+				.help("Subtract attempt runtime from delays, clamping at zero"),
+		)
+		.arg(
+			Arg::new("stop-on")
+				.long("stop-on")
+				.value_name("CODE")
+				.value_delimiter(',')
+				.action(clap::ArgAction::Append)
+				.value_parser(value_parser!(i32).range(0..))
+				.help("Stop on these exit codes (repeatable or comma-separated)"),
+		)
+		.arg(
 			// Once the program is seen, every remaining token belongs to it.
 			Arg::new("command")
 				.num_args(1..)
@@ -23,6 +52,85 @@ pub(crate) fn app() -> clap::Command {
 				.allow_hyphen_values(true)
 				.value_parser(value_parser!(OsString)),
 		)
+}
+
+// Decimal arithmetic avoids float rounding and rejects unrepresentable durations.
+fn parse_duration(input: &str) -> Result<std::time::Duration, String> {
+	let invalid =
+		|| "expected a nonnegative duration (e.g. 500ms, 1.5s, 1m; bare seconds)".to_owned();
+	let split = input
+		.find(|c: char| !c.is_ascii_digit() && c != '.')
+		.unwrap_or(input.len());
+	let (number, unit) = input.split_at(split);
+	let nanos: u128 = match unit {
+		"ns" => 1,
+		"us" => 1_000,
+		"ms" => 1_000_000,
+		"" | "s" => 1_000_000_000,
+		"m" => 60_000_000_000,
+		"h" => 3_600_000_000_000,
+		_ => return Err(invalid()),
+	};
+	let (whole, fraction) = number.split_once('.').unwrap_or((number, ""));
+	if whole.is_empty() || fraction.len() > 9 || (number.contains('.') && fraction.is_empty()) {
+		return Err(invalid());
+	}
+	let scale = 10_u128.pow(u32::try_from(fraction.len()).map_err(|_| invalid())?);
+	let whole = whole.parse::<u128>().map_err(|_| invalid())?;
+	let fraction = if fraction.is_empty() {
+		0
+	} else {
+		fraction.parse::<u128>().map_err(|_| invalid())?
+	};
+	let value = whole
+		.checked_mul(scale)
+		.and_then(|v| v.checked_add(fraction))
+		.and_then(|v| v.checked_mul(nanos))
+		.ok_or_else(invalid)?;
+	if value % scale != 0 {
+		return Err(invalid());
+	}
+	let value = value / scale;
+	Ok(std::time::Duration::new(
+		u64::try_from(value / 1_000_000_000).map_err(|_| invalid())?,
+		u32::try_from(value % 1_000_000_000).map_err(|_| invalid())?,
+	))
+}
+
+#[cfg(test)]
+mod durations {
+	use super::parse_duration;
+	use std::time::Duration;
+	#[test]
+	fn valid() {
+		for (input, expected) in [
+			("500ms", 500),
+			("2s", 2000),
+			("1.5s", 1500),
+			("1m", 60000),
+			("2", 2000),
+			("0s", 0),
+		] {
+			assert_eq!(parse_duration(input), Ok(Duration::from_millis(expected)));
+		}
+	}
+	#[test]
+	fn invalid() {
+		for input in [
+			"",
+			"-1s",
+			"NaN",
+			"inf",
+			"1.2.3s",
+			"1fortnight",
+			"1.s",
+			".5s",
+			"0.1ns",
+			"18446744073709551616s",
+		] {
+			assert!(parse_duration(input).is_err(), "{input}");
+		}
+	}
 }
 
 pub(crate) fn command(arg_matches: &clap::ArgMatches) -> Option<Command> {
